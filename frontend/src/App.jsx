@@ -1,12 +1,20 @@
-import React from 'react';
-import './App.css';
-import ReservationPage from './pages/ReservationPage';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
+import FrontPage from "./pages/FrontPage";
+import ReservationPage from "./pages/ReservationPage";
+import ManagePage from "./pages/ManageReservations";
 function App() {
   return (
-    <div className="App">
-      <ReservationPage />
-    </div>
+    <>
+      {/*<NavBar />*/}
+
+      <Routes>
+        <Route path="/" element={<FrontPage />} />
+        <Route path="/reservation" element={<ReservationPage />} />
+        <Route path="/manage" element={<ManagePage />} />
+      </Routes>
+    </>
   );
 }
 
