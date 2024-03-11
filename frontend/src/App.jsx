@@ -1,8 +1,12 @@
+import React from 'react';
+import './App.css';
+import ReservationPage from './pages/ReservationPage';
+
 function App() {
   return (
-    <>
-      <h2>Hello, World!</h2>
-    </>
+    <div className="App">
+      <ReservationPage />
+    </div>
   );
 }
 
