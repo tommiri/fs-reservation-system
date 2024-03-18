@@ -4,10 +4,12 @@ import { Routes, Route } from "react-router-dom";
 import FrontPage from "./pages/FrontPage";
 import ReservationPage from "./pages/ReservationPage";
 import ManagePage from "./pages/ManageReservations";
+
+import NavBar from "./components/NavBar";
 function App() {
   return (
     <>
-      {/*<NavBar />*/}
+      <NavBar />
 
       <Routes>
         <Route path="/" element={<FrontPage />} />
