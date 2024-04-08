@@ -1,4 +1,5 @@
-import { DataTypes, Model } from 'sequelize';
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../db/sequelize');
 
 /**
  * Represents a reservation.
@@ -41,8 +42,9 @@ Reservation.init(
     },
   },
   {
-    sequelize: any, // Placeholder
+    sequelize,
     modelName: 'Reservation',
-    timestamps: true,
   }
 );
+
+module.exports = Reservation;
