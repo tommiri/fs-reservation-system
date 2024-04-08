@@ -14,6 +14,7 @@ Reservation.init(
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: true,
+      primaryKey: true,
     },
     customer_name: {
       type: DataTypes.STRING,
@@ -36,7 +37,7 @@ Reservation.init(
         },
       },
     },
-    reservation_time: {
+    reservation_datetime: {
       type: DataTypes.DATE,
       allowNull: false,
     },
