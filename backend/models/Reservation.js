@@ -18,13 +18,20 @@ Reservation.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    customer_email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isEmail: true,
+      },
+    },
     customer_count: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         max: {
           args: 8,
-          msg: 'For reservations larger than 8 people please call us!',
+          msg: 'For reservations larger than 8 people please give us a call!',
         },
       },
     },
