@@ -3,7 +3,9 @@ CREATE TABLE IF NOT EXISTS `Reservations` (
   `customer_name` varchar(255) NOT NULL,
   `customer_email` varchar(255) NOT NULL,
   `customer_count` int NOT NULL,
-  `reservation_date` date NOT NULL,
+  `reservation_datetime` datetime NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`reservation_number`)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
@@ -13,7 +15,7 @@ INSERT INTO
     `customer_name`,
     `customer_email`,
     `customer_count`,
-    `reservation_date`
+    `reservation_datetime`
   )
 VALUES
   (
@@ -21,12 +23,12 @@ VALUES
     'John Doe',
     'john@example.com',
     2,
-    '1970-01-01'
+    '2025-01-01 12:00:00'
   ),
   (
     '36902f33-7d0c-4f79-a208-4cfb5583b1dc',
     'Jane Doe',
     'jane@example.com',
     4,
-    '1970-01-02'
+    '2025-01-02 12:00:00'
   );
