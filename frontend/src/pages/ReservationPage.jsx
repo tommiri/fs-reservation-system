@@ -103,23 +103,45 @@ const StyledSelect = styled.select`
 `;
 
 const ReservationPage = () => {
-  // Initial state for guests is an empty string to show the placeholder
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [guests, setGuests] = useState(''); // Start with an empty string
+  const [guests, setGuests] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Before submitting, validate or convert guests to a number
     const numberOfGuests = Number(guests) || 1; // Default to 1 if not a number
-    console.log('Reservation details:', {
-      selectedDate,
-      name,
-      email,
-      guests: numberOfGuests,
-    });
-    alert('Reservation submitted!');
+
+    // Construct the reservation object
+    const reservationDetails = {
+      customerName: name,
+      customerEmail: email,
+      customerCount: numberOfGuests,
+      reservationDatetime: selectedDate.toISOString().slice(0, 19).replace('T', ' ')
+    };
+
+    console.log(reservationDetails)
+
+    try {
+      const response = await fetch('http://localhost:5003/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reservationDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Reservation successful:', result);
+      alert('Reservation submitted successfully!');
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      alert('Failed to submit reservation. Please try again.');
+    }
   };
 
   return (
