@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-const darkBackground = "#262626";
-const formBackground = "#333";
-const textColor = "#FFF";
+const darkBackground = '#262626';
+const formBackground = '#333';
+const textColor = '#FFF';
 
 const Container = styled.div`
   background-color: ${darkBackground};
@@ -12,6 +12,7 @@ const Container = styled.div`
   padding: 20px;
   height: 200vh;
   color: ${textColor};
+  margin-top: 60px;
 `;
 const Form = styled.form`
   background-color: ${formBackground};
@@ -19,6 +20,8 @@ const Form = styled.form`
   flex-direction: column;
   width: 400px;
   padding: 30px;
+  margin-top: 20px;
+  box-shadow: 0 0 10px 0 #00000060;
 `;
 const StyledInput = styled.input`
   background-color: ${formBackground};

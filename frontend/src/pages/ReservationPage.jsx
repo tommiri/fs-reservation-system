@@ -15,6 +15,7 @@ const Container = styled.div`
   padding: 20px;
   height: 200vh;
   color: ${textColor};
+  margin-top: 60px;
 `;
 
 const Form = styled.form`
@@ -23,6 +24,8 @@ const Form = styled.form`
   flex-direction: column;
   width: 400px;
   padding: 30px;
+  box-shadow: 0 0 10px 0 #00000060;
+  margin-top: 20px;
 `;
 
 const StyledInput = styled.input`
@@ -51,7 +54,7 @@ const StyledDatePicker = styled(DatePicker)`
   background-color: ${formBackground};
   color: ${textColor};
   border: none;
-  border-bottom: 1px solid ${textColor}; 
+  border-bottom: 1px solid ${textColor};
   margin: 10px 0;
   padding: 10px 0;
   font-size: 16px;
@@ -73,9 +76,8 @@ const StyledButton = styled.button`
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
-    text-transform: uppercase; 
+    text-transform: uppercase;
   }
-
 `;
 
 const StyledSelect = styled.select`
@@ -90,12 +92,12 @@ const StyledSelect = styled.select`
   -moz-appearance: none;
   appearance: none;
 
-  option[value=""][disabled] {
+  option[value=''][disabled] {
     color: rgba(255, 255, 255, 0.5);
   }
 
   // Style the rest of the options normally
-  option:not([value=""]) {
+  option:not([value='']) {
     color: ${textColor};
   }
 `;
@@ -111,7 +113,12 @@ const ReservationPage = () => {
     e.preventDefault();
     // Before submitting, validate or convert guests to a number
     const numberOfGuests = Number(guests) || 1; // Default to 1 if not a number
-    console.log('Reservation details:', { selectedDate, name, email, guests: numberOfGuests });
+    console.log('Reservation details:', {
+      selectedDate,
+      name,
+      email,
+      guests: numberOfGuests,
+    });
     alert('Reservation submitted!');
   };
 
@@ -144,9 +151,13 @@ const ReservationPage = () => {
           onChange={(e) => setGuests(e.target.value)}
           required
         >
-          <option value="" disabled selected>Number of Guests</option>
-          {[...Array(8).keys()].map(num => (
-            <option key={num} value={num + 1}>{num + 1}</option>
+          <option value="" disabled selected>
+            Number of Guests
+          </option>
+          {[...Array(8).keys()].map((num) => (
+            <option key={num} value={num + 1}>
+              {num + 1}
+            </option>
           ))}
         </StyledSelect>
         <StyledButton type="submit">Reserve Table</StyledButton>
@@ -156,4 +167,3 @@ const ReservationPage = () => {
 };
 
 export default ReservationPage;
-  
