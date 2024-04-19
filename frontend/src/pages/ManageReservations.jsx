@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const darkBackground = '#262626';
@@ -37,7 +38,6 @@ const StyledInput = styled.input`
     text-transform: uppercase;
   }
 
-  // Remove spinner from number input
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -59,10 +59,26 @@ const StyledButton = styled.button`
 `;
 
 export default function ManageReservations() {
-  const handleSubmit = (event) => {
+  const [reservationDetails, setReservationDetails] = useState(null);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const reservationCode = event.target.elements[0].value;
-    console.log(reservationCode);
+
+    try {
+      const response = await fetch(`http://localhost:5003/reservations/${reservationCode}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch reservation details');
+      }
+      const data = await response.json();
+      setReservationDetails(data);
+      setError('');
+    } catch (error) {
+      console.error('Error fetching reservation:', error);
+      setError('Failed to fetch reservation details. Please try again.');
+      setReservationDetails(null);
+    }
   };
 
   return (
@@ -73,6 +89,17 @@ export default function ManageReservations() {
         <StyledInput type="text" placeholder="Reservation code" />
         <StyledButton type="submit">Search</StyledButton>
       </Form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {reservationDetails && (
+        <div>
+          <p><strong>Reservation Number:</strong> {reservationDetails.reservation_number}</p>
+          <p><strong>Name:</strong> {reservationDetails.customer_name}</p>
+          <p><strong>Email:</strong> {reservationDetails.customer_email}</p>
+          <p><strong>Number of Guests:</strong> {reservationDetails.customer_count}</p>
+          <p><strong>Date and Time:</strong> {reservationDetails.reservation_datetime}</p>
+        </div>
+      )}
     </Container>
   );
 }
+

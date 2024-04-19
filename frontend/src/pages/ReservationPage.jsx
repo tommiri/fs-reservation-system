@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 
 const darkBackground = '#262626';
@@ -104,23 +106,49 @@ const StyledSelect = styled.select`
 
 const ReservationPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState('11:00'); // Default time
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [guests, setGuests] = useState('');
+
+  // Generate time options for the select dropdown
+  const timeOptions = Array.from({ length: 25 }, (_, index) => {
+    const hour = Math.floor(index / 2) + 11; // Start from 11 AM
+    const minute = index % 2 === 0 ? '00' : '30';
+    if (hour < 23) { // Only show times up to 23:30
+      return `${hour}:${minute}`;
+    }
+    return null;
+  }).filter(Boolean);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const numberOfGuests = Number(guests) || 1; // Default to 1 if not a number
 
-    // Construct the reservation object
+    // Create a new Date object from the selected date
+    const dateTime = new Date(selectedDate);
+
+    // Extract hours and minutes from the selected time
+    const [hours, minutes] = selectedTime.split(':').map(Number);
+
+    // Set the hours and minutes to the date object
+    dateTime.setHours(hours, minutes, 0, 0); // Ensuring seconds and milliseconds are zero
+
+    // Adjust for Finnish timezone (UTC+2 or UTC+3)
+    const timezoneOffset = dateTime.getTimezoneOffset() + 420; // Finnish standard time offset in minutes
+    dateTime.setMinutes(dateTime.getMinutes() - timezoneOffset);
+
+    // Format the dateTime to a string expected by the server
+    const formattedDateTime = dateTime.toISOString().slice(0, 19).replace('T', ' ');
+
     const reservationDetails = {
       customerName: name,
       customerEmail: email,
       customerCount: numberOfGuests,
-      reservationDatetime: selectedDate.toISOString().slice(0, 19).replace('T', ' ')
+      reservationDatetime: formattedDateTime // Updated to use formattedDateTime
     };
 
-    console.log(reservationDetails)
+    console.log('Final reservation details:', reservationDetails);
 
     try {
       const response = await fetch('http://localhost:5003/reservations', {
@@ -136,16 +164,18 @@ const ReservationPage = () => {
       }
 
       const result = await response.json();
-      console.log('Reservation successful:', result);
-      alert('Reservation submitted successfully!');
+      toast.success(`Reservation successful! Your reservation number is: ${result.reservationNumber}`);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
-      alert('Failed to submit reservation. Please try again.');
+      toast.error('Failed to submit reservation. Please try again.');
     }
   };
 
+
+
   return (
     <Container>
+      <ToastContainer />
       <h2>Table Reservation</h2>
       <Form onSubmit={handleSubmit}>
         <StyledDatePicker
@@ -154,6 +184,14 @@ const ReservationPage = () => {
           minDate={new Date()}
           dateFormat="MMMM d, yyyy"
         />
+        <StyledSelect
+          value={selectedTime}
+          onChange={(e) => setSelectedTime(e.target.value)}
+        >
+          {timeOptions.map((time, index) => (
+            <option key={index} value={time}>{time}</option>
+          ))}
+        </StyledSelect>
         <StyledInput
           type="text"
           value={name}
@@ -173,13 +211,9 @@ const ReservationPage = () => {
           onChange={(e) => setGuests(e.target.value)}
           required
         >
-          <option value="" disabled selected>
-            Number of Guests
-          </option>
-          {[...Array(8).keys()].map((num) => (
-            <option key={num} value={num + 1}>
-              {num + 1}
-            </option>
+          <option value="" disabled selected>Number of Guests</option>
+          {[...Array(8).keys()].map(num => (
+            <option key={num} value={num + 1}>{num + 1}</option>
           ))}
         </StyledSelect>
         <StyledButton type="submit">Reserve Table</StyledButton>
