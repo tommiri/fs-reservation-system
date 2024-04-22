@@ -135,21 +135,14 @@ const ReservationPage = () => {
     // Set the hours and minutes to the date object
     dateTime.setHours(hours, minutes, 0, 0); // Ensuring seconds and milliseconds are zero
 
-    // Adjust for Finnish timezone (UTC+2 or UTC+3)
-    const timezoneOffset = dateTime.getTimezoneOffset() + 420; // Finnish standard time offset in minutes
-    dateTime.setMinutes(dateTime.getMinutes() - timezoneOffset);
-
-    // Format the dateTime to a string expected by the server
-    const formattedDateTime = dateTime
-      .toISOString()
-      .slice(0, 19)
-      .replace('T', ' ');
+    // Format the date to ISO string for database entry
+    const ISODateTime = dateTime.toISOString();
 
     const reservationDetails = {
-      customerName: name,
-      customerEmail: email,
-      customerCount: numberOfGuests,
-      reservationDatetime: formattedDateTime, // Updated to use formattedDateTime
+      customer_name: name,
+      customer_email: email,
+      customer_count: numberOfGuests,
+      reservation_datetime: ISODateTime,
     };
 
     console.log('Final reservation details:', reservationDetails);
@@ -171,7 +164,7 @@ const ReservationPage = () => {
 
       const result = await response.json();
       toast.success(
-        `Reservation successful! Your reservation number is: ${result.reservationNumber}`
+        `Reservation successful! Your reservation number is: ${result.reservation_number}`
       );
     } catch (error) {
       console.error(
