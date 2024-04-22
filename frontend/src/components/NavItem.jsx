@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const Container = styled.div`
   margin: 0 10px;
@@ -17,7 +17,7 @@ const StyledNavLink = styled(NavLink)`
   overflow: hidden;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     bottom: 0;
     left: 0;
@@ -39,7 +39,7 @@ const StyledNavLink = styled(NavLink)`
 const NavItem = ({ name, to }) => {
   return (
     <Container>
-      <StyledNavLink to={to} activeClassName="active">
+      <StyledNavLink to={to} className="active">
         {name}
       </StyledNavLink>
     </Container>
