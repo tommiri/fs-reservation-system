@@ -1,5 +1,5 @@
 const Reservation = require('../models/Reservation');
-const { sendReservationEmail } = require('../utility/emailService');
+// const { sendReservationEmail } = require('../utility/emailService');
 
 const getReservations = async (_req, res) => {
   const reservations = await Reservation.findAll();
@@ -40,7 +40,7 @@ const createReservation = async (req, res) => {
       customerEmail: customerEmail,
       customerCount: customerCount,
       reservationDatetime: reservationDatetime,
-      reservationId: reservation.id // Assuming ID is returned from the creation
+      reservationId: reservation.id, // Assuming ID is returned from the creation
     };
 
     // Send confirmation email
