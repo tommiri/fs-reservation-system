@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import ClipLoader from "react-spinners/ClipLoader";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-const darkBackground = "#262626";
-const formBackground = "#333";
-const textColor = "#FFF";
+const darkBackground = '#262626';
+const formBackground = '#333';
+const textColor = '#FFF';
 
 const Container = styled.div`
   background-color: ${darkBackground};
@@ -62,7 +62,7 @@ const StyledButton = styled.button`
 export default function ManageReservations() {
   const [reservationDetails, setReservationDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,16 +71,20 @@ export default function ManageReservations() {
     try {
       setIsLoading(true);
       const apiUrl = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${apiUrl}/reservations/${reservationCode}`);
+      const response = await fetch(
+        `${apiUrl}/reservations/${reservationCode}`
+      );
       if (!response.ok) {
-        throw new Error("Failed to fetch reservation details");
+        throw new Error('Failed to fetch reservation details');
       }
       const data = await response.json();
       setReservationDetails(data);
-      setError("");
+      setError('');
     } catch (error) {
-      console.error("Error fetching reservation:", error);
-      setError("Failed to fetch reservation details. Please try again.");
+      console.error('Error fetching reservation:', error);
+      setError(
+        'Failed to fetch reservation details. Please try again.'
+      );
       setReservationDetails(null);
     }
     setIsLoading(false);
@@ -92,30 +96,31 @@ export default function ManageReservations() {
       <Form onSubmit={handleSubmit}>
         <p>Enter reservation code to Edit</p>
         <StyledInput type="text" placeholder="Reservation code" />
-        <div style={{ alignSelf: "center", marginTop: 2 }}>
+        <div style={{ alignSelf: 'center', marginTop: 2 }}>
           {isLoading && <ClipLoader color="#36d7b7" />}
         </div>
         <StyledButton type="submit">Search</StyledButton>
       </Form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {reservationDetails && (
         <div>
           <p>
-            <strong>Reservation Number:</strong>{" "}
+            <strong>Reservation Number:</strong>{' '}
             {reservationDetails.reservation_number}
           </p>
           <p>
             <strong>Name:</strong> {reservationDetails.customer_name}
           </p>
           <p>
-            <strong>Email:</strong> {reservationDetails.customer_email}
+            <strong>Email:</strong>{' '}
+            {reservationDetails.customer_email}
           </p>
           <p>
-            <strong>Number of Guests:</strong>{" "}
+            <strong>Number of Guests:</strong>{' '}
             {reservationDetails.customer_count}
           </p>
           <p>
-            <strong>Date and Time:</strong>{" "}
+            <strong>Date and Time:</strong>{' '}
             {reservationDetails.reservation_datetime}
           </p>
         </div>
