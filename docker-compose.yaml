@@ -1,6 +1,12 @@
-version: '3.9'
-
 services:
+  server:
+    image: reservations-backend
+    env_file:
+      - .env
+    ports:
+      - '13000:3001'
+    restart: always
+
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
