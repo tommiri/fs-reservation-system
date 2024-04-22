@@ -1,5 +1,5 @@
 const Reservation = require('../models/Reservation');
-// const { sendReservationEmail } = require('../utility/emailService');
+const sendReservationEmail = require('../utility/mailer');
 
 const getReservations = async (_req, res) => {
   const reservations = await Reservation.findAll();
@@ -20,27 +20,31 @@ const getReservation = async (req, res) => {
 
 const createReservation = async (req, res) => {
   const {
-    customerName,
-    customerEmail,
-    customerCount,
-    reservationDatetime,
+    customer_name,
+    customer_email,
+    customer_count,
+    reservation_datetime,
   } = req.body;
 
   try {
     const reservation = await Reservation.create({
-      customer_name: customerName,
-      customer_email: customerEmail,
-      customer_count: customerCount,
-      reservation_datetime: reservationDatetime,
+      customer_name,
+      customer_email,
+      customer_count,
+      reservation_datetime,
     });
+
+    // Get the generated reservation number
+    const reservation_number =
+      reservation.dataValues.reservation_number;
 
     // Prepare details for sending email
     const reservationDetails = {
-      customerName: customerName,
-      customerEmail: customerEmail,
-      customerCount: customerCount,
-      reservationDatetime: reservationDatetime,
-      reservationId: reservation.id, // Assuming ID is returned from the creation
+      reservation_number,
+      customer_name,
+      customer_email,
+      customer_count,
+      reservation_datetime,
     };
 
     // Send confirmation email
@@ -56,21 +60,24 @@ const createReservation = async (req, res) => {
 const updateReservation = async (req, res) => {
   const { reservationId } = req.params;
   const {
-    customerName,
-    customerEmail,
-    customerCount,
-    reservationDatetime,
+    customer_name,
+    customer_email,
+    customer_count,
+    reservation_datetime,
   } = req.body;
+
   const reservation = await Reservation.findByPk(reservationId);
   if (!reservation) {
     return res.status(404).json({ error: 'Reservation not found' });
   }
+
   await reservation.update({
-    customer_name: customerName,
-    customer_email: customerEmail,
-    customer_count: customerCount,
-    reservation_datetime: reservationDatetime,
+    customer_name,
+    customer_email,
+    customer_count,
+    reservation_datetime,
   });
+
   res.json(reservation);
 };
 
