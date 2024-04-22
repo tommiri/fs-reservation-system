@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styled from "styled-components";
 import ReservationForm from "../components/ReservationForm";
 
 const darkBackground = "#262626";
@@ -26,6 +26,8 @@ const ReservationPage = () => {
     email: "",
     guests: 0,
   });
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const numberOfGuests = Number(formData.guests) || 1;
@@ -42,12 +44,10 @@ const ReservationPage = () => {
       customer_count: numberOfGuests,
       reservation_datetime: ISODateTime,
     };
-
-    console.log("Final reservation details:", reservationDetails);
-
-    const apiUrl = import.meta.env.VITE_API_URL;
-
+    
     try {
+      setIsLoading(true);
+      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/reservations`, {
         method: "POST",
         headers: {
@@ -61,10 +61,12 @@ const ReservationPage = () => {
       }
 
       const result = await response.json();
+      setIsLoading(false);
       toast.success(
         `Reservation successful! Your reservation number is: ${result.reservation_number}`
       );
     } catch (error) {
+      setIsLoading(false);
       console.error("There was a problem with the fetch operation:", error);
       toast.error("Failed to submit reservation. Please try again.");
     }
@@ -78,6 +80,7 @@ const ReservationPage = () => {
         formData={formData}
         setFormData={setFormData}
         type="create"
+        isLoading={isLoading}
       />
     </Container>
   );

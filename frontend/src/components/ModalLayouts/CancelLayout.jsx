@@ -1,21 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const CancelLayout = ({ onHide, props }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const handleCancelReservation = async () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const reservationID = props.reservationDetails.reservation_number;
     try {
+      setIsLoading(true);
       const response = await fetch(`${apiUrl}/reservations/${reservationID}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
+        setIsLoading(false);
         props.toast.success("Reservation cancelled successfully");
-        onHide()
+        onHide();
       } else {
-        props.toast.error("Failed to cancel reservation");
+        throw new Error("Network response was not ok");
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error cancelling reservation:", error);
       props.toast.error("Failed to cancel reservation");
     }
@@ -28,8 +33,17 @@ const CancelLayout = ({ onHide, props }) => {
   );
 
   const body = (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <p>Are you sure you want to cancel this reservation?</p>
+      <div style={{ alignSelf: "center" }}>
+        {isLoading && <ClipLoader color="#36d7b7" />}
+      </div>
       <div
         style={{
           display: "flex",
