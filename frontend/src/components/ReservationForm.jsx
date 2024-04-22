@@ -89,13 +89,8 @@ const StyledSelect = styled.select`
   }
 `;
 
-const ReservationForm = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState("11:00");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [guests, setGuests] = useState("");
-
+//type: "create" | "edit"
+const ReservationForm = ({ handleSubmit, formData, setFormData, type }) => {
   const timeOptions = Array.from({ length: 25 }, (_, index) => {
     const hour = Math.floor(index / 2) + 11; // Start from 11 AM
     const minute = index % 2 === 0 ? "00" : "30";
@@ -106,61 +101,19 @@ const ReservationForm = () => {
     return null;
   }).filter(Boolean);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const numberOfGuests = Number(guests) || 1;
-
-    const dateTime = new Date(selectedDate);
-    const [hours, minutes] = selectedTime.split(":").map(Number);
-    dateTime.setHours(hours, minutes, 0, 0);
-
-    const ISODateTime = dateTime.toISOString();
-
-    const reservationDetails = {
-      customer_name: name,
-      customer_email: email,
-      customer_count: numberOfGuests,
-      reservation_datetime: ISODateTime,
-    };
-
-    console.log("Final reservation details:", reservationDetails);
-
-    const apiUrl = import.meta.env.VITE_API_URL;
-
-    try {
-      const response = await fetch(`${apiUrl}/reservations`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reservationDetails),
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const result = await response.json();
-      toast.success(
-        `Reservation successful! Your reservation number is: ${result.reservation_number}`
-      );
-    } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      toast.error("Failed to submit reservation. Please try again.");
-    }
-  };
-
   return (
     <Form onSubmit={handleSubmit}>
       <StyledDatePicker
-        selected={selectedDate}
-        onChange={(date) => setSelectedDate(date)}
+        selected={formData.selectedDate}
+        onChange={(date) => setFormData({ ...formData, selectedDate: date })}
         minDate={new Date()}
         dateFormat="MMMM d, yyyy"
       />
       <StyledSelect
-        value={selectedTime}
-        onChange={(e) => setSelectedTime(e.target.value)}
+        value={formData.selectedTime}
+        onChange={(e) =>
+          setFormData({ ...formData, selectedTime: e.target.value })
+        }
       >
         {timeOptions.map((time, index) => (
           <option key={index} value={time}>
@@ -170,24 +123,24 @@ const ReservationForm = () => {
       </StyledSelect>
       <StyledInput
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
         placeholder="Name"
         required
       />
       <StyledInput
         type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={formData.email}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         placeholder="Email"
         required
       />
       <StyledSelect
-        value={guests}
-        onChange={(e) => setGuests(e.target.value)}
+        value={formData.guests}
+        onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
         required
       >
-        <option value="" disabled selected>
+        <option value="" disabled>
           Number of Guests
         </option>
         {[...Array(8).keys()].map((num) => (
@@ -196,7 +149,11 @@ const ReservationForm = () => {
           </option>
         ))}
       </StyledSelect>
-      <StyledButton type="submit">Reserve Table</StyledButton>
+      {type === "create" ? (
+        <StyledButton type="submit">Reserve Table</StyledButton>
+      ) : (
+        <StyledButton type="submit">Update Reservation</StyledButton>
+      )}
     </Form>
   );
 };
