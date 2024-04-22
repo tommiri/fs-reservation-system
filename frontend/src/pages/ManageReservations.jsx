@@ -71,9 +71,7 @@ export default function ManageReservations() {
     try {
       setIsLoading(true);
       const apiUrl = import.meta.env.VITE_API_URL;
-      const response = await fetch(
-        `${apiUrl}/reservations/${reservationCode}`
-      );
+      const response = await fetch(`${apiUrl}/reservations/${reservationCode}`);
       if (!response.ok) {
         throw new Error('Failed to fetch reservation details');
       }
@@ -82,9 +80,7 @@ export default function ManageReservations() {
       setError('');
     } catch (error) {
       console.error('Error fetching reservation:', error);
-      setError(
-        'Failed to fetch reservation details. Please try again.'
-      );
+      setError('Failed to fetch reservation details. Please try again.');
       setReservationDetails(null);
     }
     setIsLoading(false);
@@ -94,7 +90,7 @@ export default function ManageReservations() {
     <Container>
       <h2>Manage Reservations</h2>
       <Form onSubmit={handleSubmit}>
-        <p>Enter reservation code to Edit</p>
+        <p>Enter reservation code to Edit:</p>
         <StyledInput type="text" placeholder="Reservation code" />
         <div style={{ alignSelf: 'center', marginTop: 2 }}>
           {isLoading && <ClipLoader color="#36d7b7" />}
@@ -103,7 +99,8 @@ export default function ManageReservations() {
       </Form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {reservationDetails && (
-        <div>
+        <Form>
+          <h3 style={{ marginBottom: 20 }}>Your reservation details:</h3>
           <p>
             <strong>Reservation Number:</strong>{' '}
             {reservationDetails.reservation_number}
@@ -112,8 +109,7 @@ export default function ManageReservations() {
             <strong>Name:</strong> {reservationDetails.customer_name}
           </p>
           <p>
-            <strong>Email:</strong>{' '}
-            {reservationDetails.customer_email}
+            <strong>Email:</strong> {reservationDetails.customer_email}
           </p>
           <p>
             <strong>Number of Guests:</strong>{' '}
@@ -123,7 +119,13 @@ export default function ManageReservations() {
             <strong>Date and Time:</strong>{' '}
             {reservationDetails.reservation_datetime}
           </p>
-        </div>
+          <h4 style={{ marginTop: 20 }}>
+            Do you wish to edit or cancel the reservation?
+          </h4>
+          <div style={{ marginTop: 10 }}>
+            <p> nappulat tänne</p>
+          </div>
+        </Form>
       )}
     </Container>
   );
