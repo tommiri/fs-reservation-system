@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import ClipLoader from "react-spinners/ClipLoader";
+import Modal from "../components/Modal";
 
 const darkBackground = "#262626";
 const formBackground = "#333";
@@ -16,7 +17,7 @@ const Container = styled.div`
   color: ${textColor};
   margin-top: 60px;
 `;
-const Form = styled.form`
+const Card = styled.div`
   background-color: ${formBackground};
   display: flex;
   flex-direction: column;
@@ -63,6 +64,17 @@ export default function ManageReservations() {
   const [reservationDetails, setReservationDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [modal, setModal] = useState({
+    show: false,
+    modalType: "",
+  });
+
+  const showModal = (modalType) => {
+    setModal({
+      show: true,
+      modalType,
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -89,17 +101,19 @@ export default function ManageReservations() {
   return (
     <Container>
       <h2>Manage Reservations</h2>
-      <Form onSubmit={handleSubmit}>
-        <p>Enter reservation code to Edit:</p>
-        <StyledInput type="text" placeholder="Reservation code" />
-        <div style={{ alignSelf: "center", marginTop: 2 }}>
-          {isLoading && <ClipLoader color="#36d7b7" />}
-        </div>
-        <StyledButton type="submit">Search</StyledButton>
-      </Form>
+      <form onSubmit={handleSubmit}>
+        <Card>
+          <p>Enter reservation code to Edit:</p>
+          <StyledInput type="text" placeholder="Reservation code" />
+          <div style={{ alignSelf: "center", marginTop: 2 }}>
+            {isLoading && <ClipLoader color="#36d7b7" />}
+          </div>
+          <StyledButton type="submit">Search</StyledButton>
+        </Card>
+      </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {reservationDetails && (
-        <Form>
+        <Card>
           <h3 style={{ marginBottom: 20 }}>Your reservation details:</h3>
           <p>
             <strong>Reservation Number:</strong>
@@ -134,7 +148,7 @@ export default function ManageReservations() {
           >
             <button
               onClick={() => {
-                alert("edit modal"); //openModal();
+                showModal("edit");
               }}
               style={{
                 width: "5.5rem",
@@ -146,7 +160,7 @@ export default function ManageReservations() {
             </button>
             <button
               onClick={() => {
-                alert("cancel modal"); //openModal();
+                showModal("cancel");
               }}
               style={{
                 width: "5.5rem",
@@ -157,8 +171,15 @@ export default function ManageReservations() {
               Cancel
             </button>
           </div>
-        </Form>
+        </Card>
       )}
+      <Modal
+        onHide={() => {
+          setModal({ show: false, modalType: "" });
+        }}
+        show={modal.show}
+        modalType={modal.modalType}
+      />
     </Container>
   );
 }
