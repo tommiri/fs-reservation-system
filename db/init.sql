@@ -23,7 +23,7 @@ VALUES
     'John Doe',
     'john@example.com',
     2,
-    '2025-01-01 12:00:00'
+    '2025-01-01 12:00:00' -- Saved to database as ISO Time
   ),
   (
     '36902f33-7d0c-4f79-a208-4cfb5583b1dc',
