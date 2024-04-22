@@ -71,7 +71,9 @@ export default function ManageReservations() {
     try {
       setIsLoading(true);
       const apiUrl = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${apiUrl}/reservations/${reservationCode}`);
+      const response = await fetch(
+        `${apiUrl}/reservations/${reservationCode}`
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch reservation details');
       }
@@ -80,7 +82,9 @@ export default function ManageReservations() {
       setError('');
     } catch (error) {
       console.error('Error fetching reservation:', error);
-      setError('Failed to fetch reservation details. Please try again.');
+      setError(
+        'Failed to fetch reservation details. Please try again.'
+      );
       setReservationDetails(null);
     }
     setIsLoading(false);
@@ -100,7 +104,9 @@ export default function ManageReservations() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {reservationDetails && (
         <Form>
-          <h3 style={{ marginBottom: 20 }}>Your reservation details:</h3>
+          <h3 style={{ marginBottom: 20 }}>
+            Your reservation details:
+          </h3>
           <p>
             <strong>Reservation Number:</strong>{' '}
             {reservationDetails.reservation_number}
@@ -109,7 +115,8 @@ export default function ManageReservations() {
             <strong>Name:</strong> {reservationDetails.customer_name}
           </p>
           <p>
-            <strong>Email:</strong> {reservationDetails.customer_email}
+            <strong>Email:</strong>{' '}
+            {reservationDetails.customer_email}
           </p>
           <p>
             <strong>Number of Guests:</strong>{' '}
@@ -117,7 +124,9 @@ export default function ManageReservations() {
           </p>
           <p>
             <strong>Date and Time:</strong>{' '}
-            {reservationDetails.reservation_datetime}
+            {new Date(
+              reservationDetails.reservation_datetime
+            ).toLocaleString('en-FI')}
           </p>
           <h4 style={{ marginTop: 20 }}>
             Do you wish to edit or cancel the reservation?
