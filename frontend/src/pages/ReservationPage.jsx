@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
-import ReservationForm from "../components/ReservationForm"; // Importing ReservationForm component
+import ReservationForm from "../components/ReservationForm";
 
 const darkBackground = "#262626";
 const textColor = "#FFF";
@@ -21,11 +19,66 @@ const Container = styled.div`
 `;
 
 const ReservationPage = () => {
+  const [formData, setFormData] = useState({
+    selectedDate: new Date(),
+    selectedTime: "",
+    name: "",
+    email: "",
+    guests: 0,
+  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const numberOfGuests = Number(formData.guests) || 1;
+
+    const dateTime = new Date(formData.selectedDate);
+    const [hours, minutes] = formData.selectedTime.split(":").map(Number);
+    dateTime.setHours(hours, minutes, 0, 0);
+
+    const ISODateTime = dateTime.toISOString();
+
+    const reservationDetails = {
+      customer_name: formData.name,
+      customer_email: formData.email,
+      customer_count: numberOfGuests,
+      reservation_datetime: ISODateTime,
+    };
+
+    console.log("Final reservation details:", reservationDetails);
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    try {
+      const response = await fetch(`${apiUrl}/reservations`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reservationDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      toast.success(
+        `Reservation successful! Your reservation number is: ${result.reservation_number}`
+      );
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      toast.error("Failed to submit reservation. Please try again.");
+    }
+  };
   return (
     <Container>
       <ToastContainer />
       <h2>Table Reservation</h2>
-      <ReservationForm /> {/* Render ReservationForm component */}
+      <ReservationForm
+        handleSubmit={handleSubmit}
+        formData={formData}
+        setFormData={setFormData}
+        type="create"
+      />
     </Container>
   );
 };
