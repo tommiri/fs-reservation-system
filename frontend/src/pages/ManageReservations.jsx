@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
 import Modal from "../components/Modal";
 
@@ -106,7 +106,6 @@ export default function ManageReservations() {
   return (
     <Container>
       <ToastContainer />
-      <p>95678dc8-81bc-4f2e-9e1d-e32c0aacc9f5</p>
       <h2>Manage Reservations</h2>
       <form onSubmit={handleSubmit}>
         <Card>

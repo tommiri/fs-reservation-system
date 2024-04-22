@@ -1,7 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import styled from "styled-components";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const formBackground = "#333";
 const textColor = "#FFF";
@@ -90,7 +91,13 @@ const StyledSelect = styled.select`
 `;
 
 //type: "create" | "edit"
-const ReservationForm = ({ handleSubmit, formData, setFormData, type }) => {
+const ReservationForm = ({
+  handleSubmit,
+  formData,
+  setFormData,
+  type,
+  isLoading,
+}) => {
   const timeOptions = Array.from({ length: 25 }, (_, index) => {
     const hour = Math.floor(index / 2) + 11; // Start from 11 AM
     const minute = index % 2 === 0 ? "00" : "30";
@@ -149,6 +156,9 @@ const ReservationForm = ({ handleSubmit, formData, setFormData, type }) => {
           </option>
         ))}
       </StyledSelect>
+      <div style={{ alignSelf: "center" }}>
+        {isLoading && <ClipLoader color="#36d7b7" />}
+      </div>
       {type === "create" ? (
         <StyledButton type="submit">Reserve Table</StyledButton>
       ) : (

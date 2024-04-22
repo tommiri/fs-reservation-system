@@ -9,7 +9,7 @@ const EditLayout = ({ props }) => {
     email: "",
     guests: 0,
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const numberOfGuests = Number(formData.guests) || 1;
@@ -27,11 +27,10 @@ const EditLayout = ({ props }) => {
       reservation_datetime: ISODateTime,
     };
 
-    console.log("Final reservation details:", reservationDetails);
-
     const apiUrl = import.meta.env.VITE_API_URL;
     const reservationID = props.reservationDetails.reservation_number;
     try {
+      setIsLoading(true);
       const response = await fetch(`${apiUrl}/reservations/${reservationID}`, {
         method: "PUT",
         headers: {
@@ -40,12 +39,16 @@ const EditLayout = ({ props }) => {
         body: JSON.stringify(reservationDetails),
       });
 
-      if (response.ok) {
-        props.toast.success("Reservation updated successfully");
-      } else {
-        props.toast.error("Failed to update reservation");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+      const result = await response.json();
+      setIsLoading(false);
+      props.toast.success(
+        `Reservation updated successfully! Your reservation number is: ${result.reservation_number}`
+      );
     } catch (error) {
+      setIsLoading(false);
       console.error("Error updating reservation:", error);
       props.toast.error("Failed to update reservation");
     }
@@ -63,6 +66,7 @@ const EditLayout = ({ props }) => {
       formData={formData}
       setFormData={setFormData}
       type="edit"
+      isLoading={isLoading}
     />
   );
 
