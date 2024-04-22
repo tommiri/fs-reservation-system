@@ -115,7 +115,8 @@ const ReservationPage = () => {
   const timeOptions = Array.from({ length: 25 }, (_, index) => {
     const hour = Math.floor(index / 2) + 11; // Start from 11 AM
     const minute = index % 2 === 0 ? '00' : '30';
-    if (hour < 23) { // Only show times up to 23:30
+    if (hour < 23) {
+      // Only show times up to 23:30
       return `${hour}:${minute}`;
     }
     return null;
@@ -139,19 +140,24 @@ const ReservationPage = () => {
     dateTime.setMinutes(dateTime.getMinutes() - timezoneOffset);
 
     // Format the dateTime to a string expected by the server
-    const formattedDateTime = dateTime.toISOString().slice(0, 19).replace('T', ' ');
+    const formattedDateTime = dateTime
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
 
     const reservationDetails = {
       customerName: name,
       customerEmail: email,
       customerCount: numberOfGuests,
-      reservationDatetime: formattedDateTime // Updated to use formattedDateTime
+      reservationDatetime: formattedDateTime, // Updated to use formattedDateTime
     };
 
     console.log('Final reservation details:', reservationDetails);
 
+    const apiUrl = import.meta.env.VITE_API_URL;
+
     try {
-      const response = await fetch('http://localhost:5003/reservations', {
+      const response = await fetch(`${apiUrl}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,14 +170,17 @@ const ReservationPage = () => {
       }
 
       const result = await response.json();
-      toast.success(`Reservation successful! Your reservation number is: ${result.reservationNumber}`);
+      toast.success(
+        `Reservation successful! Your reservation number is: ${result.reservationNumber}`
+      );
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
+      console.error(
+        'There was a problem with the fetch operation:',
+        error
+      );
       toast.error('Failed to submit reservation. Please try again.');
     }
   };
-
-
 
   return (
     <Container>
@@ -189,7 +198,9 @@ const ReservationPage = () => {
           onChange={(e) => setSelectedTime(e.target.value)}
         >
           {timeOptions.map((time, index) => (
-            <option key={index} value={time}>{time}</option>
+            <option key={index} value={time}>
+              {time}
+            </option>
           ))}
         </StyledSelect>
         <StyledInput
@@ -211,9 +222,13 @@ const ReservationPage = () => {
           onChange={(e) => setGuests(e.target.value)}
           required
         >
-          <option value="" disabled selected>Number of Guests</option>
-          {[...Array(8).keys()].map(num => (
-            <option key={num} value={num + 1}>{num + 1}</option>
+          <option value="" disabled selected>
+            Number of Guests
+          </option>
+          {[...Array(8).keys()].map((num) => (
+            <option key={num} value={num + 1}>
+              {num + 1}
+            </option>
           ))}
         </StyledSelect>
         <StyledButton type="submit">Reserve Table</StyledButton>
