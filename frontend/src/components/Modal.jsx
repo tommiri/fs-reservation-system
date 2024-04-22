@@ -1,5 +1,6 @@
 import React from "react";
 import EditLayout from "./ModalLayouts/EditLayout";
+import CancelLayout from "./ModalLayouts/CancelLayout";
 
 const Modal = ({ onHide, show, modalType, ...props }) => {
   if (!show) {
@@ -12,6 +13,7 @@ const Modal = ({ onHide, show, modalType, ...props }) => {
       modalContent = EditLayout({ props });
       break;
     case "cancel":
+      modalContent = CancelLayout({ onHide, props });
       break;
     default:
       break;
