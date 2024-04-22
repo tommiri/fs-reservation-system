@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import styled from "styled-components";
 import ClipLoader from "react-spinners/ClipLoader";
 import Modal from "../components/Modal";
@@ -80,6 +81,10 @@ export default function ManageReservations() {
     event.preventDefault();
     const reservationCode = event.target.elements[0].value;
 
+    if (!reservationCode) {
+      setError("Please enter a reservation code");
+      return;
+    }
     try {
       setIsLoading(true);
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -100,6 +105,8 @@ export default function ManageReservations() {
 
   return (
     <Container>
+      <ToastContainer />
+      <p>95678dc8-81bc-4f2e-9e1d-e32c0aacc9f5</p>
       <h2>Manage Reservations</h2>
       <form onSubmit={handleSubmit}>
         <Card>
@@ -115,10 +122,10 @@ export default function ManageReservations() {
       {reservationDetails && (
         <Card>
           <h3 style={{ marginBottom: 20 }}>Your reservation details:</h3>
-          <p>
+          <span>
             <strong>Reservation Number:</strong>
             <p>{reservationDetails.reservation_number}</p>
-          </p>
+          </span>
           <p>
             <strong>Name:</strong> {reservationDetails.customer_name}
           </p>
@@ -179,6 +186,8 @@ export default function ManageReservations() {
         }}
         show={modal.show}
         modalType={modal.modalType}
+        reservationDetails={reservationDetails}
+        toast={toast}
       />
     </Container>
   );
