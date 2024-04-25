@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import ClipLoader from "react-spinners/ClipLoader";
+import React from 'react';
+import styled from 'styled-components';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-const formBackground = "#333";
-const textColor = "#FFF";
+const formBackground = '#333';
+const textColor = '#FFF';
 
 const Form = styled.form`
   background-color: ${formBackground};
@@ -80,12 +80,12 @@ const StyledSelect = styled.select`
   -moz-appearance: none;
   appearance: none;
 
-  option[value=""][disabled] {
+  option[value=''][disabled] {
     color: rgba(255, 255, 255, 0.5);
   }
 
   // Style the rest of the options normally
-  option:not([value=""]) {
+  option:not([value='']) {
     color: ${textColor};
   }
 `;
@@ -100,7 +100,7 @@ const ReservationForm = ({
 }) => {
   const timeOptions = Array.from({ length: 25 }, (_, index) => {
     const hour = Math.floor(index / 2) + 11; // Start from 11 AM
-    const minute = index % 2 === 0 ? "00" : "30";
+    const minute = index % 2 === 0 ? '00' : '30';
     if (hour < 23) {
       // Only show times up to 23:30
       return `${hour}:${minute}`;
@@ -112,15 +112,19 @@ const ReservationForm = ({
     <Form onSubmit={handleSubmit}>
       <StyledDatePicker
         selected={formData.selectedDate}
-        onChange={(date) => setFormData({ ...formData, selectedDate: date })}
+        onChange={(date) =>
+          setFormData({ ...formData, selectedDate: date })
+        }
         minDate={new Date()}
         dateFormat="MMMM d, yyyy"
+        name="reservation_date"
       />
       <StyledSelect
         value={formData.selectedTime}
         onChange={(e) =>
           setFormData({ ...formData, selectedTime: e.target.value })
         }
+        name="reservation_time"
       >
         {timeOptions.map((time, index) => (
           <option key={index} value={time}>
@@ -131,20 +135,29 @@ const ReservationForm = ({
       <StyledInput
         type="text"
         value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, name: e.target.value })
+        }
+        name="customer_name"
         placeholder="Name"
         required
       />
       <StyledInput
         type="email"
         value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, email: e.target.value })
+        }
+        name="customer_email"
         placeholder="Email"
         required
       />
       <StyledSelect
         value={formData.guests}
-        onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, guests: e.target.value })
+        }
+        name="customer_count"
         required
       >
         <option value="" disabled>
@@ -156,10 +169,10 @@ const ReservationForm = ({
           </option>
         ))}
       </StyledSelect>
-      <div style={{ alignSelf: "center" }}>
+      <div style={{ alignSelf: 'center' }}>
         {isLoading && <ClipLoader color="#36d7b7" />}
       </div>
-      {type === "create" ? (
+      {type === 'create' ? (
         <StyledButton type="submit">Reserve Table</StyledButton>
       ) : (
         <StyledButton type="submit">Update Reservation</StyledButton>
