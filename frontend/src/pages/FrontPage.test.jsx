@@ -7,7 +7,9 @@ import FrontPage from './FrontPage';
 describe('FrontPage', () => {
   it('renders correctly', () => {
     render(<FrontPage />);
-    expect(screen.getByText('Welcome to ...')).toBeInTheDocument();
+    expect(
+      screen.getByText('Welcome to SomeCoolDiner')
+    ).toBeInTheDocument();
   });
 
   it('displays navigation instructions', () => {
@@ -17,7 +19,9 @@ describe('FrontPage', () => {
 
   it('has proper styling', () => {
     render(<FrontPage />);
-    const containerElement = screen.getByRole('heading', { level: 1 }).parentElement;
+    const containerElement = screen.getByRole('heading', {
+      level: 1,
+    }).parentElement;
     expect(containerElement).toHaveStyle('padding: 3rem 1rem');
     expect(containerElement).toHaveStyle('text-align: center');
     expect(containerElement).toHaveStyle('margin-top: 60px');
@@ -25,7 +29,9 @@ describe('FrontPage', () => {
 
   it('has correct paragraph styling', () => {
     render(<FrontPage />);
-    const paragraphElement = screen.getByText(/navigation bar/i).closest('p');
+    const paragraphElement = screen
+      .getByText(/navigation bar/i)
+      .closest('p');
     expect(paragraphElement).toHaveStyle('margin-top: 2rem');
   });
 });
