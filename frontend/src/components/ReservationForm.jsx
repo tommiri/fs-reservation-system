@@ -152,7 +152,9 @@ const ReservationForm = ({
         placeholder="Email"
         required
       />
+      <label htmlFor="guests">Number of Guests</label>
       <StyledSelect
+        id="guests"
         value={formData.guests}
         onChange={(e) =>
           setFormData({ ...formData, guests: e.target.value })
@@ -160,7 +162,7 @@ const ReservationForm = ({
         name="customer_count"
         required
       >
-        <option value="" disabled>
+        <option disabled value="">
           Number of Guests
         </option>
         {[...Array(8).keys()].map((num) => (

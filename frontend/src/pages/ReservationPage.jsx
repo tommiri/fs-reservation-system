@@ -31,13 +31,13 @@ const ReservationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const numberOfGuests = Number(formData.guests) || 1;
-
+  
     const dateTime = new Date(formData.selectedDate);
     const [hours, minutes] = formData.selectedTime.split(":").map(Number);
     dateTime.setHours(hours, minutes, 0, 0);
-
+  
     const ISODateTime = dateTime.toISOString();
-
+  
     const reservationDetails = {
       customer_name: formData.name,
       customer_email: formData.email,
@@ -55,20 +55,28 @@ const ReservationPage = () => {
         },
         body: JSON.stringify(reservationDetails),
       });
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
+  
       const result = await response.json();
-      setIsLoading(false);
-      toast.success(
-        `Reservation successful! Your reservation number is: ${result.reservation_number}`
-      );
+      toast.success(`Reservation successful! Your reservation number is: ${result.reservation_number}`);
+  
+      // Reset form data after successful fetch
+      setFormData({
+        selectedDate: new Date(),
+        selectedTime: "",
+        name: "",
+        email: "",
+        guests: 0,
+      });
+  
     } catch (error) {
-      setIsLoading(false);
       console.error("There was a problem with the fetch operation:", error);
       toast.error("Failed to submit reservation. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
