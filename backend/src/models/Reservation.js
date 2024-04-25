@@ -9,6 +9,7 @@ class Reservation extends Model {}
 
 Reservation.init(
   {
+    // Unique identifier for the reservation
     reservation_number: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -16,17 +17,20 @@ Reservation.init(
       unique: true,
       primaryKey: true,
     },
+    // Name of the customer making the reservation
     customer_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    // Email of the customer making the reservation
     customer_email: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isEmail: true,
+        isEmail: true, // Validate that the email is in a valid format
       },
     },
+    // Number of customers in the reservation
     customer_count: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -37,6 +41,7 @@ Reservation.init(
         },
       },
     },
+    // Date and time of the reservation
     reservation_datetime: {
       type: DataTypes.DATE,
       allowNull: false,

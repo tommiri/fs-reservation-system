@@ -1,6 +1,7 @@
 const Reservation = require('../models/Reservation');
 const sendReservationEmail = require('../utility/mailer');
 
+// Get all reservations
 const getReservations = async (_req, res) => {
   const reservations = await Reservation.findAll();
   if (!reservations.length) {
@@ -9,6 +10,7 @@ const getReservations = async (_req, res) => {
   res.json(reservations);
 };
 
+// Get a specific reservation by ID
 const getReservation = async (req, res) => {
   const { reservationId } = req.params;
   const reservation = await Reservation.findByPk(reservationId);
@@ -18,6 +20,7 @@ const getReservation = async (req, res) => {
   res.json(reservation);
 };
 
+// Create a new reservation
 const createReservation = async (req, res) => {
   const {
     customer_name,
@@ -25,6 +28,16 @@ const createReservation = async (req, res) => {
     customer_count,
     reservation_datetime,
   } = req.body;
+
+  // Check if all required fields are present in the request body
+  if (
+    !customer_name ||
+    !customer_email ||
+    !customer_count ||
+    !reservation_datetime
+  ) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
   try {
     const reservation = await Reservation.create({
@@ -57,6 +70,7 @@ const createReservation = async (req, res) => {
   }
 };
 
+// Update an existing reservation
 const updateReservation = async (req, res) => {
   const { reservationId } = req.params;
   const {
@@ -65,6 +79,16 @@ const updateReservation = async (req, res) => {
     customer_count,
     reservation_datetime,
   } = req.body;
+
+  // Check if all required fields are present in the request body
+  if (
+    !customer_name ||
+    !customer_email ||
+    !customer_count ||
+    !reservation_datetime
+  ) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
   const reservation = await Reservation.findByPk(reservationId);
   if (!reservation) {
@@ -81,6 +105,7 @@ const updateReservation = async (req, res) => {
   res.json(reservation);
 };
 
+// Delete a reservation
 const deleteReservation = async (req, res) => {
   const { reservationId } = req.params;
   const reservation = await Reservation.findByPk(reservationId);

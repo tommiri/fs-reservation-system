@@ -10,7 +10,7 @@ app.use(cors());
 app.use('/reservations', reservations);
 
 app.get('/health', (_req, res) => {
-  res.send('OK');
+  res.status(200).send('OK');
 });
 
 module.exports = app;

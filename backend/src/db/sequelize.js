@@ -1,6 +1,8 @@
 const { Sequelize } = require('sequelize');
+
 require('dotenv').config();
 
+// Create a new Sequelize instance
 const sequelize = new Sequelize({
   host: process.env.MYSQL_HOST,
   username: process.env.MYSQL_USERNAME,
@@ -10,6 +12,7 @@ const sequelize = new Sequelize({
   logging: false,
 });
 
+// Authenticate the Sequelize instance
 sequelize
   .authenticate()
   .then(() => {
