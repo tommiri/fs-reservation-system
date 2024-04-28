@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import NavItem from './NavItem';
 import { useNavigate } from 'react-router-dom';
+import logoUrl from '../../public/logo.png';
 
 const Container = styled.nav`
   display: flex;
@@ -44,7 +45,7 @@ const NavBar = () => {
           navigate('/');
         }}
       >
-        <Image src="./public/logo.png" alt="logo" />
+        <Image src={logoUrl} alt="logo" />
       </LogoContainer>
       <NavContainer>
         <NavItem name="Book a Table" to="/reservation" />
